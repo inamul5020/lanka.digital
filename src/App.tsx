@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AuthProvider } from './lib/auth';
 import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import ForumPage from './pages/ForumPage';
@@ -7,13 +8,14 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ThreadDetailPage from './pages/ThreadDetailPage';
+import AuthCallback from './pages/AuthCallback';
 import UpgradeModal from './components/UpgradeModal';
 import SuccessModal from './components/SuccessModal';
 import SupabaseTest from './components/SupabaseTest';
 import DatabaseTest from './components/DatabaseTest';
 import StorageTest from './components/StorageTest';
 
-type Page = 'home' | 'forum' | 'store' | 'leaderboard' | 'profile' | 'product' | 'thread';
+type Page = 'home' | 'forum' | 'store' | 'leaderboard' | 'profile' | 'product' | 'thread' | 'auth-callback';
 
 interface NavigationState {
   page: Page;
@@ -76,34 +78,37 @@ function App() {
             onNavigate={handleNavigate}
           />
         );
+      case 'auth-callback':
+        return <AuthCallback onNavigate={handleNavigate} />;
       default:
         return <HomePage onNavigate={handleNavigate} onUpgradeClick={handleUpgradeClick} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navigation
-        currentPage={currentNavigation.page}
-        onNavigate={handleNavigate}
-        onUpgradeClick={handleUpgradeClick}
-      />
-      {renderPage()}
-      <UpgradeModal
-        isOpen={showUpgradeModal}
-        onClose={() => setShowUpgradeModal(false)}
-        onUpgrade={handleUpgrade}
-      />
-      <SuccessModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        type={successType}
-        message={successMessage}
-      />
-      <SupabaseTest />
-      <DatabaseTest />
-      <StorageTest />
-      <footer className="bg-gray-900 text-white py-12 mt-12">
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation
+          currentPage={currentNavigation.page}
+          onNavigate={handleNavigate}
+          onUpgradeClick={handleUpgradeClick}
+        />
+        {renderPage()}
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          onUpgrade={handleUpgrade}
+        />
+        <SuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+          type={successType}
+          message={successMessage}
+        />
+        <SupabaseTest />
+        <DatabaseTest />
+        <StorageTest />
+        <footer className="bg-gray-900 text-white py-12 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -222,6 +227,7 @@ function App() {
         </div>
       </footer>
     </div>
+    </AuthProvider>
   );
 }
 

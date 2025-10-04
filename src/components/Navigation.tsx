@@ -1,5 +1,8 @@
-import { Menu, X, Search, User, ShoppingBag, MessageSquare, Trophy } from 'lucide-react';
+import { Menu, X, Search, User, ShoppingBag, MessageSquare, Trophy, Crown } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '../lib/auth';
+import AuthModal from './AuthModal';
+import ProfileDropdown from './ProfileDropdown';
 
 interface NavigationProps {
   currentPage: string;
@@ -8,8 +11,11 @@ interface NavigationProps {
 }
 
 export default function Navigation({ currentPage, onNavigate, onUpgradeClick }: NavigationProps) {
+  const { user, profile } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   const navItems = [
     { id: 'home', label: 'Home', icon: null },
@@ -59,24 +65,51 @@ export default function Navigation({ currentPage, onNavigate, onUpgradeClick }: 
               <Search className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center space-x-2 px-3 py-1.5 bg-blue-50 rounded-lg">
-              <span className="text-sm font-medium text-blue-600">5/5 unlocks</span>
-            </div>
+            {user ? (
+              // Authenticated user section
+              <>
+                {/* Daily Unlocks */}
+                <div className="flex items-center space-x-2 px-3 py-1.5 bg-blue-50 rounded-lg">
+                  <span className="text-sm font-medium text-blue-600">
+                    {profile?.is_premium ? '∞' : '5'}/5 unlocks
+                  </span>
+                </div>
 
-            <button
-              onClick={() => onNavigate('profile')}
-              className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              <User className="w-4 h-4" />
-              <span className="font-medium text-sm">Profile</span>
-            </button>
+                {/* Premium Badge */}
+                {profile?.is_premium && (
+                  <div className="flex items-center space-x-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-lg">
+                    <Crown className="w-4 h-4" />
+                    <span className="text-xs font-medium">Premium</span>
+                  </div>
+                )}
 
-            <button
-              onClick={onUpgradeClick}
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg transition-shadow"
-            >
-              Upgrade
-            </button>
+                {/* Profile Dropdown */}
+                <ProfileDropdown onClose={() => {}} />
+              </>
+            ) : (
+              // Unauthenticated user section
+              <>
+                <button
+                  onClick={() => {
+                    setAuthMode('login');
+                    setShowAuthModal(true);
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+                >
+                  Sign In
+                </button>
+
+                <button
+                  onClick={() => {
+                    setAuthMode('register');
+                    setShowAuthModal(true);
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg transition-shadow"
+                >
+                  Join Free
+                </button>
+              </>
+            )}
           </div>
 
           <button
@@ -140,6 +173,13 @@ export default function Navigation({ currentPage, onNavigate, onUpgradeClick }: 
           </div>
         </div>
       )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+      />
     </nav>
   );
 }
