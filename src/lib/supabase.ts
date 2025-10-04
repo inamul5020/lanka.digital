@@ -19,7 +19,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })
 
-// Database types for TypeScript support - Lanka.Digital Schema (Phase 1.2)
+// Database types for TypeScript support - Lanka.Digital Schema (Phase 1.2 + 1.3)
+// Includes storage bucket types and file management
 export type Database = {
   public: {
     Tables: {

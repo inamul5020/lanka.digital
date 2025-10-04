@@ -11,6 +11,7 @@ import UpgradeModal from './components/UpgradeModal';
 import SuccessModal from './components/SuccessModal';
 import SupabaseTest from './components/SupabaseTest';
 import DatabaseTest from './components/DatabaseTest';
+import StorageTest from './components/StorageTest';
 
 type Page = 'home' | 'forum' | 'store' | 'leaderboard' | 'profile' | 'product' | 'thread';
 
@@ -101,6 +102,7 @@ function App() {
       />
       <SupabaseTest />
       <DatabaseTest />
+      <StorageTest />
       <footer className="bg-gray-900 text-white py-12 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">

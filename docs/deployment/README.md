@@ -5,6 +5,7 @@ This directory contains production deployment guides and configuration files.
 ## Contents
 
 - **[supabase-self-hosted-setup.md](./supabase-self-hosted-setup.md)** - Complete self-hosted Supabase setup guide for Phase 1.1
+- **[storage-setup-guide.md](./storage-setup-guide.md)** - Complete file storage configuration for Phase 1.3
 - Production deployment instructions
 - Docker configuration guides
 - Environment setup for production
